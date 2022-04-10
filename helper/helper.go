@@ -25,7 +25,7 @@ func ApiResponse(message string, code int, status string, data interface{}) Resp
 	}
 	return response
 }
-func FormatError(err error) []string {
+func FormatValidatorError(err error) []string {
 	var errors []string
 
 	for _, e := range err.(validator.ValidationErrors) {

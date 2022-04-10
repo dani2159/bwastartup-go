@@ -12,6 +12,10 @@ type LoginInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
+type CheckEmailInput struct {
+	Email string `json:"email" binding:"required,email"`
+}
+
 //input dari user
 //handler, mapping input dari user -> struct input
 //service : melakukan mapping dari struct input ke struct entity

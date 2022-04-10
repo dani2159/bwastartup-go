@@ -19,24 +19,13 @@ func main() {
 	userRepository := user.NewRepository(db)
 	userService := user.NewServicce(userRepository)
 
-	//login
-	// input := user.LoginInput{
-	// 	Email:    "dani@yahoo.com",
-	// 	Password: "Dani",
-	// }
-	// user, err := userService.Login(input)
-	// if err != nil {
-	// 	fmt.Println(err.Error())
-	// }
-	// fmt.Println(user.Email)
-	// fmt.Println(user.Name)
-
 	userHandler := handler.NewUserHandler(userService)
 
 	router := gin.Default()
 	api := router.Group("/api/v1")
 	api.POST("/users", userHandler.RegisterUser)
-	api.POST("/login", userHandler.Login)
+	api.POST("/sessions", userHandler.Login)
+	api.POST("/email_checkers", userHandler.CheckEmailAvailability)
 	router.Run()
 
 	// var users []user.User

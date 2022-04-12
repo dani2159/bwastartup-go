@@ -1,11 +1,12 @@
 package main
 
 import (
-	"bwastartup/auth"
-	"bwastartup/handler"
-	"bwastartup/user"
 	"log"
 	"os"
+
+	"github.com/bwastratup/auth"
+	"github.com/bwastratup/handler"
+	"github.com/bwastratup/user"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"

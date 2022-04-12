@@ -1,13 +1,14 @@
 package handler
 
 import (
-	"bwastartup/auth"
-	"bwastartup/helper"
-	"bwastartup/user"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/bwastratup/auth"
+	"github.com/bwastratup/helper"
+	"github.com/bwastratup/user"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"

@@ -165,8 +165,6 @@ func (h *userHandler) UploadAvatar(c *gin.Context) {
 		return
 	}
 
-	//dapat dari JWT seharusnya
-
 	_, err = h.userService.SaveAvatar(userID, path)
 	if err != nil {
 		data := gin.H{"is_uploaded": false, "message": "File not found"}

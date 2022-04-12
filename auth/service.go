@@ -16,7 +16,7 @@ type Service interface {
 type jwtService struct {
 }
 
-func NewServicce() *jwtService {
+func NewService() *jwtService {
 	return &jwtService{}
 }
 

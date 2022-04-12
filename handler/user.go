@@ -1,14 +1,13 @@
 package handler
 
 import (
+	"bwastartup/auth"
+	"bwastartup/helper"
+	"bwastartup/user"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/bwastratup/auth"
-	"github.com/bwastratup/helper"
-	"github.com/bwastratup/user"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -154,7 +153,9 @@ func (h *userHandler) UploadAvatar(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	userID := 6
+
+	currentUser := c.MustGet("currentUser").(user.User)
+	userID := currentUser.ID
 	path := fmt.Sprintf("%s%d-%s", os.Getenv("PATH_UPLOAD_IMAGE"), userID, file.Filename)
 	err = c.SaveUploadedFile(file, path)
 	if err != nil {

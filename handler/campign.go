@@ -93,7 +93,35 @@ func (h *campaignHandler) CreateCampaign(c *gin.Context) {
 
 }
 
-// tangkap parameter dari user ke input struct
-// ambil current user dari jwt/handler
-// panggil service. parameter inputnya struct (dan juga buat slug)
-// panggil repository untuk simpan data campai baru
+func (h *campaignHandler) UpdateCampaign(c *gin.Context) {
+	var inputID campaign.GetCampaignDetailInput
+	err := c.ShouldBindUri(&inputID)
+	if err != nil {
+		response := helper.ApiResponse("Failed to Update campaign", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	var inputData campaign.CreateCampaignInput
+	err = c.ShouldBindJSON(&inputData)
+	if err != nil {
+		errors := helper.FormatValidatorError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.ApiResponse("Failed to update campaign", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	currentUser := c.MustGet("currentUser").(user.User)
+	inputData.User = currentUser
+	updatedCampaign, err := h.campaignService.UpdateCampaign(inputID, inputData)
+	if err != nil {
+		response := helper.ApiResponse("Failed to update campaign", http.StatusUnprocessableEntity, "error", nil)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	response := helper.ApiResponse("Succes Campaign Updated", http.StatusOK, "success", campaign.FormaterCampaign(updatedCampaign))
+	c.JSON(http.StatusOK, response)
+
+}

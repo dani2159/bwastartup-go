@@ -3,6 +3,7 @@ package handler
 import (
 	"bwastartup/campaign"
 	"bwastartup/helper"
+	"bwastartup/user"
 	"net/http"
 	"strconv"
 
@@ -64,3 +65,35 @@ func (h *campaignHandler) GetCampaign(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 
 }
+
+func (h *campaignHandler) CreateCampaign(c *gin.Context) {
+	var input campaign.CreateCampaignInput
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidatorError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.ApiResponse("Failed to create campaign", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	currentUser := c.MustGet("currentUser").(user.User)
+	input.User = currentUser
+
+	newCampaign, err := h.campaignService.CreateCampaign(input)
+	if err != nil {
+		response := helper.ApiResponse("Failed to create campaign", http.StatusUnprocessableEntity, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.ApiResponse("Succes Campaign Created", http.StatusOK, "success", campaign.FormaterCampaign(newCampaign))
+	c.JSON(http.StatusOK, response)
+
+}
+
+// tangkap parameter dari user ke input struct
+// ambil current user dari jwt/handler
+// panggil service. parameter inputnya struct (dan juga buat slug)
+// panggil repository untuk simpan data campai baru

@@ -30,13 +30,16 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+	//repository(model)
 	userRepository := user.NewRepository(db)
 	campignRepository := campaign.NewRepository(db)
 
+	//service(controller)
 	userService := user.NewService(userRepository)
 	campaignService := campaign.NewService(campignRepository)
 	authService := auth.NewService()
 
+	//handler(router penghubung repo dan service)
 	userHandler := handler.NewUserHandler(userService, authService)
 	campaignHandler := handler.NewCampaignHandler(campaignService)
 
@@ -51,6 +54,7 @@ func main() {
 
 	api.GET("/campaigns", campaignHandler.GetCampaigns)
 	api.GET("/campaigns/:id", campaignHandler.GetCampaign)
+	api.POST("/campaigns", authMiddleware(authService, userService), campaignHandler.CreateCampaign)
 
 	router.Run()
 
@@ -116,15 +120,3 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 	}
 
 }
-
-// func handler(c *gin.Context) {
-// 	dsn := "root:@tcp(127.0.0.1:3306)/db_bwago?charset=utf8mb4&parseTime=True&loc=Local"
-// 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-// 	if err != nil {
-// 		log.Fatal(err.Error())
-// 	}
-// 	var users []user.User
-// 	db.Find(&users)
-
-// 	c.JSON(http.StatusOK, users)
-// }
